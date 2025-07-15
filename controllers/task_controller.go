@@ -63,6 +63,10 @@ func CreateTask(c *gin.Context) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Bad Request"})
 	}
 
-	task := data.CreateTask(newTask)
-	c.IndentedJSON(http.StatusCreated, task)
+	task, err := data.CreateTask(newTask)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, err)
+	} else {
+		c.IndentedJSON(http.StatusCreated, task)
+	}
 }
