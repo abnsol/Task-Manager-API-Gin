@@ -13,13 +13,6 @@ import (
 	"task_management/models"
 )
 
-// In-memory storage for tasks
-// var tasks = []models.Task{
-// 	{ID: "1", Title: "Go and Gin", Description: "Finish RestAPI basics with go and gin", Time: "12:30", Status: false},
-// 	{ID: "2", Title: "PostMan", Description: "Start Project and Write Docs with post man", Time: "3:30", Status: false},
-// 	{ID: "3", Title: "Mongo DB", Description: "Add persistency to the project", Time: "6:30", Status: false},
-// }
-
 // connect to db
 var db = connect_db()
 var collection = db.Database("Tasks-DataBase").Collection("Tasks")
@@ -75,17 +68,6 @@ func GetTaskById(id string) (models.Task, error) {
 	return task, nil
 }
 
-// get task Index
-// func getIndex(newTask models.Task) (int, error) {
-// 	for idx, task := range tasks {
-// 		if newTask.ID == task.ID {
-// 			return idx, nil
-// 		}
-// 	}
-
-// 	return -1, errors.New("index not found")
-// }
-
 func ReplaceTask(id string, newTask models.Task) (models.Task, error) {
 	filter := bson.D{{Key: "id", Value: id}}
 	res, _ := collection.ReplaceOne(context.TODO(), filter, newTask)
@@ -119,7 +101,7 @@ func CreateTask(task models.Task) (string, error) {
 }
 
 func connect_db() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb+srv://abensol:h92JAgiSLsdLezck@cluster0.i8xepli.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+	clientOptions := options.Client().ApplyURI("mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority")
 
 	// Connect to MongoDB
 	client, err := mongo.Connect(context.TODO(), clientOptions)
