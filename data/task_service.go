@@ -3,19 +3,16 @@ package data
 import (
 	"context"
 	"errors"
-	"fmt"
+
+	// "fmt"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-
+	// "go.mongodb.org/mongo-driver/mongo"
 	"task_management/models"
-)
 
-// connect to db
-var db = connect_db()
-var collection = db.Database("Tasks-DataBase").Collection("Tasks")
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
 
 var errTask = errors.New("task not found")
 
@@ -27,8 +24,8 @@ func GetTasks() []models.Task {
 	// Here's an array in which you can store the decoded documents
 	var tasks []models.Task
 
-	// Passing bson.D{} as the filter matches all documents in the collection
-	cur, err := collection.Find(context.TODO(), bson.D{}, findOptions)
+	// Passing bson.D{} as the filter matches all documents in the data.TaskCollectioncollection
+	cur, err := TaskCollection.Find(context.TODO(), bson.D{}, findOptions)
 	if err != nil {
 		panic(err)
 	}
@@ -60,7 +57,7 @@ func GetTasks() []models.Task {
 func GetTaskById(id string) (models.Task, error) {
 	var task models.Task
 
-	err := collection.FindOne(context.TODO(), bson.M{"id": id}).Decode(&task)
+	err := TaskCollection.FindOne(context.TODO(), bson.M{"id": id}).Decode(&task)
 	if err != nil {
 		return models.Task{}, errTask
 	}
@@ -70,7 +67,7 @@ func GetTaskById(id string) (models.Task, error) {
 
 func ReplaceTask(id string, newTask models.Task) (models.Task, error) {
 	filter := bson.D{{Key: "id", Value: id}}
-	res, _ := collection.ReplaceOne(context.TODO(), filter, newTask)
+	res, _ := TaskCollection.ReplaceOne(context.TODO(), filter, newTask)
 
 	if res.MatchedCount == 0 {
 		return models.Task{}, errors.New("id not found")
@@ -80,7 +77,7 @@ func ReplaceTask(id string, newTask models.Task) (models.Task, error) {
 }
 
 func DeleteTask(id string) (string, error) {
-	result, err := collection.DeleteOne(context.TODO(), bson.M{"id": id})
+	result, err := TaskCollection.DeleteOne(context.TODO(), bson.M{"id": id})
 	if err != nil {
 		return "", err
 	}
@@ -92,31 +89,10 @@ func DeleteTask(id string) (string, error) {
 
 // always creates Task so no need for error
 func CreateTask(task models.Task) (string, error) {
-	_, err := collection.InsertOne(context.TODO(), task)
+	_, err := TaskCollection.InsertOne(context.TODO(), task)
 
 	if err != nil {
 		return "", err
 	}
 	return "Task Created Successfully", nil
-}
-
-func connect_db() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority")
-
-	// Connect to MongoDB
-	client, err := mongo.Connect(context.TODO(), clientOptions)
-
-	if err != nil {
-		panic(err)
-	}
-
-	// Check the connection
-	err = client.Ping(context.TODO(), nil)
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("Connected to MongoDB!")
-	return client
 }
