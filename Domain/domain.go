@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -28,7 +29,7 @@ type User struct {
 }
 
 // Task use case interfaces
-type TaskUseCase interface {
+type ITaskUseCase interface {
 	CreateTask(task Task) (string, error)
 	GetTasks() []Task
 	GetTaskById(id string) (Task, error)
@@ -37,24 +38,36 @@ type TaskUseCase interface {
 }
 
 // Task repository interfaces
-type TaskRepository interface {
-	CreateTask(task Task) (string, error)
+type ITaskRepository interface {
+	CreateTask(task Task) error
 	GetTasks() []Task
 	GetTaskById(id string) (Task, error)
 	ReplaceTask(id string, newTask Task) (Task, error)
-	DeleteTask(id string) (string, error)
+	DeleteTask(id string) error
 }
 
 // User use case interfaces
-type UserUseCase interface {
+type IUserUseCase interface {
 	Register(user User) (string, error)
 	Login(user User) (string, string, error)
 	UpdateUserRole(email string, newRole string) error
 }
 
 // User repository interfaces
-type UserRepository interface {
+type IUserRepository interface {
 	Register(user User) (string, error)
-	Login(user User) (string, string, error)
 	UpdateUserRole(email string, newRole string) error
+	CheckUserExists(user User) (bool, User)
+}
+
+// Jwt service infrastructure interface
+type IJwtService interface {
+	GenerateToken(user_id primitive.ObjectID, userEmail string, userRole string) (string, error)
+	ValidateToken(tokenString string) (*jwt.Token, error)
+}
+
+// password service infrastructure interface
+type IPasswordService interface {
+	HashPassword(userPassword string) (hashedPassword []byte, err error)
+	CheckPassword(existingUserPassword string, userPassword string) error
 }

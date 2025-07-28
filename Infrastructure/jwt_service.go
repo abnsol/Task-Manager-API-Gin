@@ -8,7 +8,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GenerateToken(user_id primitive.ObjectID, userEmail string, userRole string) (string, error) {
+type JwtService struct{}
+
+func (JwtService) GenerateToken(user_id primitive.ObjectID, userEmail string, userRole string) (string, error) {
 	jwtSecret := []byte(os.Getenv("jwt_secret"))
 
 	// Generate JWT
@@ -22,7 +24,7 @@ func GenerateToken(user_id primitive.ObjectID, userEmail string, userRole string
 	return jwtToken, err
 }
 
-func ValidateToken(tokenString string) (*jwt.Token, error) {
+func (JwtService) ValidateToken(tokenString string) (*jwt.Token, error) {
 	jwtSecret := []byte(os.Getenv("jwt_secret"))
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

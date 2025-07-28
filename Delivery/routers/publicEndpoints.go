@@ -3,6 +3,7 @@ package route
 import (
 	"task_management/Delivery/controllers"
 	domain "task_management/Domain"
+	infrastructure "task_management/Infrastructure"
 	repository "task_management/Repository"
 	usecases "task_management/Usecases"
 
@@ -12,9 +13,11 @@ import (
 
 // get user controller
 func user_controller(database mongo.Database) *controllers.UserController {
+	jwt_service := infrastructure.JwtService{}
+	password_service := infrastructure.PasswordService{}
 	ur := repository.NewUserRepository(database, domain.CollectionUser)
 	uc := &controllers.UserController{
-		UserUseCase: usecases.NewUserUseCase(ur),
+		UserUseCase: usecases.NewUserUseCase(ur, password_service, jwt_service),
 	}
 
 	return uc

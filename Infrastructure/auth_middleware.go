@@ -24,7 +24,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		token, err := ValidateToken(authParts[1])
+		token, err := JwtService{}.ValidateToken(authParts[1])
 
 		if err != nil || !token.Valid {
 			c.JSON(401, gin.H{"error": "Invalid JWT"})

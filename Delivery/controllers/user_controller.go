@@ -7,7 +7,7 @@ import (
 )
 
 type UserController struct {
-	UserUseCase domain.UserUseCase
+	UserUseCase domain.IUserUseCase
 }
 
 func (uc *UserController) Register(c *gin.Context) {

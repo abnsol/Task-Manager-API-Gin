@@ -7,6 +7,7 @@ import (
 	domain "task_management/Domain"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -16,9 +17,7 @@ type TaskRepository struct {
 	collection string
 }
 
-var errTask = errors.New("task not found")
-
-func NewTaskRepository(db mongo.Database, collection string) domain.TaskRepository {
+func NewTaskRepository(db mongo.Database, collection string) domain.ITaskRepository {
 	return &TaskRepository{
 		database:   db,
 		collection: collection,
@@ -64,15 +63,12 @@ func (tr *TaskRepository) GetTasks() []domain.Task {
 
 }
 
-func (tr *TaskRepository) CreateTask(task domain.Task) (string, error) {
+func (tr *TaskRepository) CreateTask(task domain.Task) error {
+	task.ID = primitive.NewObjectID().Hex()
 	taskCollection := tr.database.Collection(tr.collection)
 	_, err := taskCollection.InsertOne(context.TODO(), task)
 
-	if err != nil {
-		return "", err
-	}
-	return "Task Created Successfully", nil
-
+	return err
 }
 
 func (tr *TaskRepository) GetTaskById(id string) (domain.Task, error) {
@@ -80,11 +76,7 @@ func (tr *TaskRepository) GetTaskById(id string) (domain.Task, error) {
 	var task domain.Task
 
 	err := taskCollection.FindOne(context.TODO(), bson.M{"id": id}).Decode(&task)
-	if err != nil {
-		return domain.Task{}, errTask
-	}
-
-	return task, nil
+	return task, err
 
 }
 
@@ -101,16 +93,16 @@ func (tr *TaskRepository) ReplaceTask(id string, newTask domain.Task) (domain.Ta
 
 }
 
-func (tr *TaskRepository) DeleteTask(id string) (string, error) {
+func (tr *TaskRepository) DeleteTask(id string) error {
 	taskCollection := tr.database.Collection(tr.collection)
 
 	result, err := taskCollection.DeleteOne(context.TODO(), bson.M{"id": id})
 	if err != nil {
-		return "", err
+		return err
 	}
 	if result.DeletedCount == 0 {
-		return "", errTask
+		return errors.New("Task not found")
 	}
-	return "Task Deleted Successfully", nil
+	return nil
 
 }

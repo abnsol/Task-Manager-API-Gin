@@ -8,7 +8,7 @@ import (
 )
 
 type TaskController struct {
-	TaskUseCase domain.TaskUseCase
+	TaskUseCase domain.ITaskUseCase
 }
 
 // invoke tc.TaskUseCase.GetTasks
