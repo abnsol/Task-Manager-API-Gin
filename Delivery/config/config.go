@@ -10,7 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func Connect_db() *mongo.Database {
+type Config struct{}
+
+func (Config) Connect_db() *mongo.Database {
 	mongoURI := os.Getenv("mongoURI")
 	clientOptions := options.Client().ApplyURI(mongoURI)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
@@ -22,7 +24,7 @@ func Connect_db() *mongo.Database {
 	return db
 }
 
-func LoadEnv() {
+func (Config) LoadEnv() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file")

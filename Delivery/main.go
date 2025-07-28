@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	config := config.Config{}
 	config.LoadEnv()
 	database := config.Connect_db()
 	router := gin.Default()
