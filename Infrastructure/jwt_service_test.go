@@ -23,7 +23,6 @@ func (s *JwtServiceSuite) SetupTest() {
 }
 
 // TearDownTest runs after each test in the suite.
-// It restores the original environment variable.
 func (s *JwtServiceSuite) TearDownTest() {
 	os.Setenv("jwt_secret", s.originalSecret)
 }

@@ -5,6 +5,7 @@
 The Task Management API is a robust, clean-architecture RESTful service built with Go and Gin for managing tasks.  
 It supports user registration, login, JWT authentication, and role-based access control (RBAC) for "Admin" and "user" roles.  
 All data is stored persistently using MongoDB Atlas (cloud MongoDB).
+Unit tests are provided for usecases, and infrastructure using Testify and mockery.
 
 ---
 
@@ -15,6 +16,7 @@ All data is stored persistently using MongoDB Atlas (cloud MongoDB).
 - Add, view, update, and delete tasks
 - Persistent storage with MongoDB Atlas
 - Clean Architecture: Handlers, services, repositories, and models are separated for maintainability
+- Unit Testing: Comprehensive tests for repo, usecase, and infra layers
 
 ---
 
@@ -29,6 +31,7 @@ All data is stored persistently using MongoDB Atlas (cloud MongoDB).
 - `/Infrastructure` - JWT and RBAC middleware          
 - `/Repository` - Data access (MongoDB logic)
 - `/Usecases` - Buisness logic (services)
+- `/Mocks` - for interface mocks
 
 
 ---
@@ -63,6 +66,18 @@ All data is stored persistently using MongoDB Atlas (cloud MongoDB).
 
 ---
 
+## Running Unit Tests
+
+- Unit tests for usecases, and infrastructure are provided.
+- To run all tests:
+  ```sh
+  go test -v ./...
+  ```
+- No need to start the server for unit tests.
+- Tests use mocks for dependencies and do not require a running database for usecase/infra tests.
+
+---
+
 ## Using the Postman Collection
 
 - **Import the provided Postman collection**:  
@@ -81,6 +96,7 @@ All data is stored persistently using MongoDB Atlas (cloud MongoDB).
 - **Refactored to Clean Architecture:** Improved maintainability and scalability by separating handlers, services, repositories, and models.
 - **Centralized Environment Loading:** Ensured `.env` is loaded before any DB or JWT operations.
 - **Improved Middleware:** JWT and role-based middleware now properly validate and authorize users.
-- **Updated Documentation:** All instructions and usage notes reflect the new structure and best practices.
+- **Comprehensive Unit Testing:** Added tests for usecases, and infrastructure using Testify and mocks.
+- **Updated Documentation:** All instructions and usage notes reflect the new structure, testing, and best practices.
 
 ---

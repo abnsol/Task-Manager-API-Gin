@@ -1,8 +1,9 @@
 # Task Management API
 
-A RESTful API for managing tasks, built with Go, Gin, and MongoDB Atlas for persistent cloud storage.  
+A robust RESTful API for managing tasks, built with Go, Gin, and MongoDB Atlas for persistent cloud storage.  
 Implements JWT authentication and role-based access control (RBAC) with "Admin" and "user" roles.  
-Now refactored using Clean Architecture for better maintainability and scalability.
+Refactored using Clean Architecture for maintainability and scalability.  
+Comprehensive unit tests are provided for usecases, and infrastructure using Testify and mockery.
 
 ---
 
@@ -14,10 +15,13 @@ Now refactored using Clean Architecture for better maintainability and scalabili
 - **Persistent Storage:** Uses MongoDB Atlas (cloud MongoDB).
 - **Error Handling:** Handles network, database, and validation errors gracefully.
 - **Clean Architecture:** Separation of concerns between handlers, services, repositories, and models.
+- **Unit Testing:** Test coverage for usecases, and infrastructure using Testify and mocks.
+- **Easy Testing:** Ready-to-use Postman collection for all endpoints.
 
 ---
 
 ## Project Structure (Clean Architecture)
+
 
 ```
 /Delivery
@@ -28,9 +32,10 @@ Now refactored using Clean Architecture for better maintainability and scalabili
 /Domain                    # Entity
 /Infrastructure            
 /Repository                # Data access (MongoDB logic)
-/Usecases                  # Buisness logic (services)
+/Usecases                  # Buisness logic (services) 
+/Mocks                     # Interface mocks
+```
 
-``` 
 ---
 
 ## Environment File Structure
@@ -47,7 +52,7 @@ mongoURI="mongodb+srv://<username>:<password>@<cluster-url>/<database>?retryWrit
 
 ---
 
-## Getting Started
+## Running & Testing
 
 1. **Clone the repository**
 2. **Create a `.env` file** as described above and fill in your MongoDB Atlas credentials and JWT secret.
@@ -57,14 +62,27 @@ mongoURI="mongodb+srv://<username>:<password>@<cluster-url>/<database>?retryWrit
    ```
 4. **Run the server**
    ```sh
-   go run cmd/main.go
+   go run Delivery/main.go
    ```
 5. The API will be available at `http://localhost:8080/`
-6. **Import the Postman collection** to test all endpoints:
+6. **Run unit tests**
+   ```sh
+   go test -v ./...
+   ```
+   - Tests cover usecases, and infrastructure.
+   - No need to start the server for unit tests.
+7. **Import the Postman collection** to test all endpoints:
    [Task Management API Postman Collection](https://web.postman.co/workspace/ed1fcb1b-aa6d-4608-8bfc-abf010bb0f11/collection/40582744-b2fb455a-9a0a-4cc8-a97e-4e19c73def65?action=share&source=copy-link&creator=40582744)
+
+---
+
+## Branches & Progress
+
+- The repository contains multiple branches reflecting different stages of development and refactoring.
+- **Switch branches** to explore the project’s evolution, from basic CRUD to full clean architecture and test coverage.
 
 ---
 
 ## Documentation
 
-See [`docs/api_documentation.md`](docs/api_documentation.md) for detailed usage, endpoint descriptions, and integration notes.
+See [`docs/api_documentation.md`](docs/api_documentation.md) for detailed usage, endpoint descriptions, integration notes, and testing instructions.
